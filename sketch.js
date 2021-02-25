@@ -5,6 +5,7 @@ var gameState= play;
 var koya, koyaImage;
 var pillow ,pillowImage, obstacle, obstacleImage;
 var ground, invisibleGround, groundImage;
+var gameOver, gameOverImg;
 var pillowGroup, obstacleGroup;
 var score;
 
@@ -13,7 +14,8 @@ function preload(){
   koyaImage= loadImage("koya.png");
   pillowImage = loadImage("pillow.png");
   obstacleImage = loadImage("fireball.png");
-  groundImage= loadImage("forest.png");
+  groundImage= loadImage("forestImg.jpg");
+  gameOverImg= loadImage("gameover.jpg");
 }
 
 function setup() {
@@ -22,7 +24,7 @@ function setup() {
   
   koya = createSprite(80,315,20,20);
   koya.addImage(koyaImage);
-  koya.scale = 0.2;
+  koya.scale = 0.09;
 
   ground=createSprite(500,300,600,600);
   ground.addImage(groundImage);
@@ -30,10 +32,14 @@ function setup() {
   ground.x=ground.width/2;
   ground.velocityX=-4;
   
-  invisibleGround= createSprite(300,580,600,10);
+  invisibleGround= createSprite(300,590,600,10);
   invisibleGround.velocityX=-4;
   invisibleGround.x=invisibleGround.width/2;
   invisibleGround.visible= false;
+
+  //gameOver= createSprite(400,100,1,1);
+  //gameOver.addImage(gameOverImg);
+  //gameOver.scale= 0.9;
 
   obstacleGroup = createGroup();
   pillowGroup = createGroup();
@@ -46,7 +52,7 @@ function draw() {
   background(225);
     
   if (gameState=== play){
-    
+   // gameOver.visible= false;
      if (invisibleGround.x < 0){
    invisibleGround.x= invisibleGround.width/2;
   }
@@ -60,17 +66,17 @@ function draw() {
      score = score+1;
   }
     switch(score){
-      case 6: koya.scale= 0.12;
+      case 4: koya.scale= 0.10;
               break;
-      case 12: koya.scale= 0.14;
+      case 10: koya.scale= 0.11;
               break;
-      case 18: koya.scale= 0.16;
+      case 14: koya.scale= 0.12;
               break;
-      case 24: koya.scale= 0.18;
+      case 18: koya.scale= 0.13;
               break;    
-      case 30: koya.scale= 0.20;
+      case 26: koya.scale= 0.14;
               break;          
-      case 36: koya.scale= 0.22;
+      case 36: koya.scale= 0.15;
               break;
         default: break;
     }
@@ -87,26 +93,11 @@ function draw() {
     }
 }
   
-  if (gameState=== end){
-    
-    ground.velocityX = 0;
-    koya.velocityY = 0;
-    koya.scale= 0.08;
-    
-    obstacleGroup.setVelocityXEach(0);
-    pillowGroup.setVelocityXEach(0);
-    
-    //koya.changeAnimation("collided", monkey_collided);
-    
-    obstacleGroup.setLifetimeEach(-1);
-    pillowGroup.setLifetimeEach(-1);
-    
-    fill("magenta")
-    stroke("black")
-    textSize(50);
-    text("GAMEOVER", 100, 170);
-
-  }
+  else {
+    (gameState=== end)
+    background("black");
+    reset();
+  }  
     
   cushion();
   obstacles();
@@ -127,7 +118,7 @@ function cushion(){
     pillow.addImage(pillowImage);
     pillow.velocityX = -3
     pillow.lifetime = 150;
-    pillow.scale = 0.1;
+    pillow.scale = 0.2;
     koya.depth = pillow.depth + 1;
     
     pillowGroup.add(pillow);
@@ -142,11 +133,24 @@ function obstacles(){
     fireBall.velocityX= -3;
     fireBall.addImage(obstacleImage);
     fireBall.setCollider("circle",0,0,180);
-    fireBall.scale= 0.3;
+    fireBall.scale= 0.2;
     fireBall.lifetime= 150;
     obstacleGroup.add(fireBall);
   }
 }
+function reset(){
+ // background("black");
+ //gameOver.visible= true;
 
+  ground.velocityX = 0;
+  koya.velocityY = 0;
+  
+  obstacleGroup.setVelocityXEach(0);
+  pillowGroup.setVelocityXEach(0);
 
-
+  pillowImage.visible= false;
+  obstacleImage.visible= false;
+  
+  fill("white")
+  text("GAME OVER!", 300,300);
+}
